@@ -13,7 +13,7 @@ function App() {
   const [hideRead, setHideRead] = useState(false);
   const [filterEmailText, setFilterEmailText] = useState("");
   const handleFilterEmailText = (e) => {
-    console.log(e.target.value);
+    //console.log(e.target.value);
     setFilterEmailText(e.target.value);
   };
   const handleSelect = (e) => {
@@ -23,30 +23,24 @@ function App() {
     setEmails(_emails);
   };
   const handleStar = (e) => {
-    console.log(e.target.value);
+    //console.log(e.target.value);
     let _emails = [...emails];
     let _email = _emails.find((m) => m.id == e.target.value);
     _email.starred = !_email.starred;
     setEmails(_emails);
   };
-  const filteredStarred = (email) => {
-    if (active == "starred") {
-      if (email.starred == true) {
-        return renderEmail(email);
-      }
-    }
-  };
+
   const getStarred = () => {
     return emails.filter(function (e) {
       return e.getStarred == true;
     });
   };
 
-  emails.starred = emails.filter((email) => email.starred);
-  emails.read = emails.filter((email) => email.read);
-  emails.unread = emails.filter((email) => !email.read);
-
-  emails.textfilter = emails.filter((email) => {
+  const starred = emails.filter((email) => email.starred);
+  console.log("starred", starred);
+  const unread = emails.filter((email) => email.read == false);
+  console.log("unread", unread);
+  const text = emails.filter((email) => {
     return (
       email.title
         .toLocaleLowerCase()
@@ -54,29 +48,15 @@ function App() {
     );
   });
 
-  const filteredRead = (email) => {
-    console.log(getStarred());
-    if (active == "inbox" && hideRead == true && email.read == false) {
-      return renderEmail(email);
-    } else {
-      if (active == "inbox" && hideRead == false) {
-        return renderEmail(email);
-      }
-    }
+  let filtered = emails;
+  if (hideRead) filtered = unread;
+  if (active == "inbox") filtered = emails;
+  if (filterEmailText)
+    filtered = filtered.filter((email) => email.text.includes(filterEmailText));
+  if (active == "starred") filtered = starred;
 
-    if (active == "starred" && hideRead == false && email.starred == true) {
-      return renderEmail(email);
-    }
+  console.log(filtered);
 
-    if (
-      active == "starred" &&
-      hideRead == true &&
-      email.read == false &&
-      email.starred == true
-    ) {
-      return renderEmail(email);
-    }
-  };
   const renderEmail = (email) => {
     return (
       <li key={email.id} className={email.read ? "email read" : "email unread"}>
@@ -145,13 +125,7 @@ function App() {
         </ul>
       </nav>
       <main className="emails">
-        {filterEmailText !== "" ? (
-          <ul>
-            {emails.textfilter.map((email, index) => filteredRead(email))}
-          </ul>
-        ) : (
-          <ul>{emails.map((email, index) => filteredRead(email))}</ul>
-        )}
+        <ul>{filtered.map((email, index) => renderEmail(email))}</ul>
       </main>
     </div>
   );
