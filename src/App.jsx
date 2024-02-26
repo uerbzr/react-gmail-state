@@ -30,16 +30,8 @@ function App() {
     setEmails(_emails);
   };
 
-  const getStarred = () => {
-    return emails.filter(function (e) {
-      return e.getStarred == true;
-    });
-  };
-
   const starred = emails.filter((email) => email.starred);
-  console.log("starred", starred);
   const unread = emails.filter((email) => email.read == false);
-  console.log("unread", unread);
   const text = emails.filter((email) => {
     return (
       email.title
