@@ -8,6 +8,7 @@ function App() {
   // Use initialEmails for state
   //console.log(initialEmails);
   const [emails, setEmails] = useState(initialEmails);
+
   const [active, setActive] = useState("inbox");
   const [hideRead, setHideRead] = useState(false);
   const [filterEmailText, setFilterEmailText] = useState("");
@@ -40,6 +41,18 @@ function App() {
       return e.getStarred == true;
     });
   };
+
+  emails.starred = emails.filter((email) => email.starred);
+  emails.read = emails.filter((email) => email.read);
+  emails.unread = emails.filter((email) => !email.read);
+
+  emails.textfilter = emails.filter((email) => {
+    return (
+      email.title
+        .toLocaleLowerCase()
+        .indexOf(filterEmailText.toLocaleLowerCase()) !== -1
+    );
+  });
 
   const filteredRead = (email) => {
     console.log(getStarred());
@@ -134,15 +147,7 @@ function App() {
       <main className="emails">
         {filterEmailText !== "" ? (
           <ul>
-            {emails
-              .filter((email) => {
-                return (
-                  email.title
-                    .toLocaleLowerCase()
-                    .indexOf(filterEmailText.toLocaleLowerCase()) !== -1
-                );
-              })
-              .map((email, index) => filteredRead(email))}
+            {emails.textfilter.map((email, index) => filteredRead(email))}
           </ul>
         ) : (
           <ul>{emails.map((email, index) => filteredRead(email))}</ul>
