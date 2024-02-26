@@ -35,7 +35,14 @@ function App() {
       }
     }
   };
+  const getStarred = () => {
+    return emails.filter(function (e) {
+      return e.getStarred == true;
+    });
+  };
+
   const filteredRead = (email) => {
+    console.log(getStarred());
     if (active == "inbox" && hideRead == true && email.read == false) {
       return renderEmail(email);
     } else {
@@ -56,27 +63,6 @@ function App() {
     ) {
       return renderEmail(email);
     }
-    /*
-    return renderEmail(email);
-    if (active == "inbox") {
-      if (hideRead == true && email.read == false) {
-      } else {
-        return renderEmail(email);
-      }
-    } else {
-      if (
-        hideRead === true &&
-        active == "starred" &&
-        email.read === false &&
-        email.starred == true
-      ) {
-        return renderEmail(email);
-      }
-
-      if (hideRead === false && active == "starred" && email.starred == true) {
-        return render(email);
-      }
-    }*/
   };
   const renderEmail = (email) => {
     return (
@@ -146,24 +132,21 @@ function App() {
         </ul>
       </nav>
       <main className="emails">
-        {
-          //let _emails = emails.filter(function(e) {  return  e.title.indexOf(filterEmailText.toLowerCase())!==-1 });
-          filterEmailText !== "" ? (
-            <ul>
-              {emails
-                .filter((email) => {
-                  return (
-                    email.title
-                      .toLocaleLowerCase()
-                      .indexOf(filterEmailText.toLocaleLowerCase()) !== -1
-                  );
-                })
-                .map((email, index) => filteredRead(email))}
-            </ul>
-          ) : (
-            <ul>{emails.map((email, index) => filteredRead(email))}</ul>
-          )
-        }
+        {filterEmailText !== "" ? (
+          <ul>
+            {emails
+              .filter((email) => {
+                return (
+                  email.title
+                    .toLocaleLowerCase()
+                    .indexOf(filterEmailText.toLocaleLowerCase()) !== -1
+                );
+              })
+              .map((email, index) => filteredRead(email))}
+          </ul>
+        ) : (
+          <ul>{emails.map((email, index) => filteredRead(email))}</ul>
+        )}
       </main>
     </div>
   );
