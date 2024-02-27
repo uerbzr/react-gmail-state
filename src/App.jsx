@@ -41,11 +41,11 @@ function App() {
   });
 
   let filtered = emails;
-  if (hideRead) filtered = unread;
   if (active == "inbox") filtered = emails;
+  if (active == "starred") filtered = starred;
+  if (hideRead) filtered = unread;
   if (filterEmailText)
     filtered = filtered.filter((email) => email.text.includes(filterEmailText));
-  if (active == "starred") filtered = starred;
 
   console.log(filtered);
 
